@@ -17,7 +17,7 @@ struct ContentView: View {
                 }
 
 
-            Text("History")
+            HistoryView(viewModel: HistoryViewModel())
                 .tabItem {
                     Image(systemName: "clock.arrow.circlepath")
                     Text("History")
