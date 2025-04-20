@@ -12,20 +12,19 @@ final class DBMigration0to1: DBMigration {
     var sourceSchemaVersion: Int = 0
     var destinationSchemaVersion: Int = 1
     
-    private let realm: Realm
-    
-    init(realm: Realm) {
-        self.realm = realm
-    }
-    
     func migrate() async throws {
         let records = try readRecordsFromDisk()
+        try writeRecordsToDB(records)
+    }
+
+    private func writeRecordsToDB(_ records: [ContractionRecordOld]) throws {
+        let realm = try Realm()
         let objects = records.map { $0.toObject() }
         try realm.write {
             realm.add(objects)
         }
     }
-    
+
     private struct ContractionRecordOld: Codable {
         let start: Date
         let end: Date

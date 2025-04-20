@@ -15,12 +15,12 @@ final class MeasureViewModel {
 
     private var timeElapsed: TimeInterval
     private var timerSubscription: AnyCancellable?
-    private let recordRepository: ContractionRecordRepository
+    private let recordRepository: ContractionRecordRepository?
 
     init(
         timeElapsed: TimeInterval = 0,
         timerSubscription: AnyCancellable? = nil,
-        recordRepository: ContractionRecordRepository = .shared
+        recordRepository: ContractionRecordRepository? = nil
     ) {
         self.timeElapsed = timeElapsed
         self.timerSubscription = timerSubscription
@@ -84,7 +84,7 @@ final class MeasureViewModel {
     private func saveRecord() async {
         let end = Date()
         let start = Date(timeInterval: -timeElapsed, since: end)
-        try? await recordRepository.addRecord(
+        try? await recordRepository?.addRecord(
             ContractionRecord(start: start, end: Date())
         )
     }

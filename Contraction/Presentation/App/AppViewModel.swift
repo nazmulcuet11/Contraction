@@ -25,8 +25,18 @@ final class AppViewModel {
     }
 
     func load() async throws {
-        let measureViewModel = MeasureViewModel()
-        let historyViewModel = HistoryViewModel()
+        let application = Application.shared
+
+        // run db migration
+        try await application.migrator.migrate()
+
+        // build root view model
+        let measureViewModel = MeasureViewModel(
+            recordRepository: application.contractionRecordRepository
+        )
+        let historyViewModel = HistoryViewModel(
+            recordRepository: application.contractionRecordRepository
+        )
         let rootViewModel = RootViewModel(
             measureViewModel: measureViewModel,
             historyViewModel: historyViewModel

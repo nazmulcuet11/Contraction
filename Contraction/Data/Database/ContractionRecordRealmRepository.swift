@@ -8,13 +8,9 @@
 import Foundation
 import RealmSwift
 
-protocol ContractionRecordRepositoryDelegate: AnyObject {
-    func didAddRecord(_ record: ContractionRecord) async
-}
+final class ContractionRecordRealmRepository: ContractionRecordRepository {
 
-final class ContractionRecordRepository {
-
-    private var delegate: ContractionRecordRepositoryDelegate?
+    private weak var delegate: ContractionRecordRepositoryDelegate?
 
     init(delegate: ContractionRecordRepositoryDelegate? = nil) {
         self.delegate = delegate
@@ -49,8 +45,4 @@ final class ContractionRecordRepository {
             realm.add(entity)
         }
     }
-}
-
-extension ContractionRecordRepository {
-    static let shared = ContractionRecordRepository()
 }

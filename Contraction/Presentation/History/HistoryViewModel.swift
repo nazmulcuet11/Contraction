@@ -14,7 +14,7 @@ import Observation
 class HistoryViewModel {
 
     private var records: [ContractionRecord] = []
-    private let repository: ContractionRecordRepository
+    private let recordRepository: ContractionRecordRepository?
 
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -23,13 +23,13 @@ class HistoryViewModel {
         return dateFormatter
     }()
 
-    init(repository: ContractionRecordRepository = .shared) {
-        self.repository = repository
-        repository.setDelegate(self)
+    init(recordRepository: ContractionRecordRepository? = nil) {
+        self.recordRepository = recordRepository
+        recordRepository?.setDelegate(self)
     }
 
     func loadData() async {
-        guard let records = try? await repository.fetchRecords() else {
+        guard let records = try? await recordRepository?.fetchRecords() else {
             return
         }
         self.records = records
@@ -54,12 +54,6 @@ class HistoryViewModel {
             sections.append(section)
         }
         return sections
-    }
-
-    // MARK: - Private
-
-    private func initialize() async {
-        repository.setDelegate(self)
     }
 }
 
