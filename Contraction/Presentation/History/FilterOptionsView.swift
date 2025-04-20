@@ -15,11 +15,15 @@ struct FilterOptionsView: View {
         NavigationView {
             Form {
                 Section {
-                    Picker("Filter", selection: $viewModel.selectedOption) {
+                    Picker(selection: $viewModel.selectedOption) {
                         ForEach(FilterOption.allCases) { option in
                             Text(option.rawValue)
                                 .tag(option)
                         }
+                    } label: {
+                        Text("Filter")
+                            .font(.title3)
+                            .bold()
                     }
                     .pickerStyle(.inline)
                 }

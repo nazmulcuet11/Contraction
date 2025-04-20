@@ -99,7 +99,7 @@ private extension HistoryViewModel {
     }
 
     func filteringLogic(record: ContractionRecord) -> Bool {
-        return true
+        return filterOptionsViewModel.isDateWithinSelectedRange(record.start)
     }
 }
 
