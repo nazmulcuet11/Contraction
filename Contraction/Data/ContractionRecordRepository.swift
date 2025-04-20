@@ -12,45 +12,36 @@ protocol ContractionRecordRepositoryDelegate: AnyObject {
     func didAddRecord(_ record: ContractionRecord) async
 }
 
-protocol ContractionRecordRepositoryProtocol {
-    func fetchRecords() async throws -> [ContractionRecord]
-    func addRecord(_ record: ContractionRecord) async throws
-    func setDelegate(_ delegate: ContractionRecordRepositoryDelegate?) async
-}
+final actor ContractionRecordRepository {
+    private let contractionRecordskey: String = "CONTRACTION_RECORDS"
+    private let userDefaults: UserDefaults
 
-final actor ContractionRecordRepository: ContractionRecordRepositoryProtocol {
-    private var records: [ContractionRecord] = []
     private var delegate: ContractionRecordRepositoryDelegate?
 
+    init(
+        userDefaults: UserDefaults = .standard,
+        delegate: ContractionRecordRepositoryDelegate? = nil
+    ) {
+        self.userDefaults = userDefaults
+        self.delegate = delegate
+    }
+
     func fetchRecords() async throws -> [ContractionRecord] {
-        return records
+        try readRecordsFromDisk()
     }
 
     func addRecord(_ record: ContractionRecord) async throws {
+        var records = try readRecordsFromDisk()
         records.append(record)
+        try writeRecordsToDisk(records: records)
         await delegate?.didAddRecord(record)
-        writeRecordsToDisk()
     }
 
     func setDelegate(_ delegate: ContractionRecordRepositoryDelegate?) {
         self.delegate = delegate
     }
 
-    init(
-        delegate: ContractionRecordRepositoryDelegate? = nil
-    ) {
-        self.delegate = delegate
-        Task {
-            await readRecordsFromDisk()
-        }
-    }
-
     // MARK: - Private
-
-    private func loadRecordsFromDisk() async {
-        self.records = readRecordsFromDisk()
-        await delegate?.didLoadRecords(records)
-    }
 
     private let encoder = {
         let encoder = JSONEncoder()
@@ -65,37 +56,20 @@ final actor ContractionRecordRepository: ContractionRecordRepositoryProtocol {
         return decoder
     }()
 
-    private nonisolated var fileURL: URL? {
-        let fileName = "contraction_records.json"
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return nil
-        }
-        let fileURL = documentsDirectory.appendingPathComponent(fileName)
-        return fileURL
+    private func writeRecordsToDisk(records: [ContractionRecord]) throws {
+        let jsonData = try encoder.encode(records)
+        let jsonString = String(data: jsonData, encoding: .utf8)
+        userDefaults.set(jsonString, forKey: contractionRecordskey)
     }
 
-    private func writeRecordsToDisk() {
-        guard let fileURL else { return }
-        do {
-
-            let data = try encoder.encode(records)
-            try data.write(to: fileURL)
-            print("✅ JSON file written successfully to: \(fileURL)")
-        } catch {
-            print("❌ Failed to write JSON file: \(error)")
-        }
-    }
-
-    private func readRecordsFromDisk() -> [ContractionRecord] {
-        guard let fileURL else { return [] }
-        do {
-            let data = try Data(contentsOf: fileURL)
-            let decodedRecords = try decoder.decode([ContractionRecord].self, from: data)
-            return decodedRecords
-        } catch {
-            print("❌ Failed to read JSON file: \(error)")
+    private func readRecordsFromDisk() throws -> [ContractionRecord] {
+        guard let jsonString = userDefaults.string(forKey: contractionRecordskey),
+              let jsonData = jsonString.data(using: .utf8) else {
             return []
         }
+
+        let decodedRecords = try decoder.decode([ContractionRecord].self, from: jsonData)
+        return decodedRecords
     }
 }
 

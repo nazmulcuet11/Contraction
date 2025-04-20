@@ -7,17 +7,19 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct RootView: View {
+    var viewModel: RootViewModel
+
     var body: some View {
         TabView {
-            MeasureView(viewModel: MeasureViewModel())
+            MeasureView(viewModel: viewModel.measureViewModel)
                 .tabItem {
                     Image(systemName: "stopwatch")
                     Text("Measure")
                 }
 
 
-            HistoryView(viewModel: HistoryViewModel())
+            HistoryView(viewModel: viewModel.historyViewModel)
                 .tabItem {
                     Image(systemName: "clock.arrow.circlepath")
                     Text("History")
@@ -27,5 +29,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    let viewModel = RootViewModel.preview()
+    return RootView(viewModel: viewModel)
 }

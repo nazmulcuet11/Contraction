@@ -13,8 +13,8 @@ import Observation
 @MainActor
 class HistoryViewModel {
 
-    private var records: [ContractionRecord]
-    private let repository: ContractionRecordRepositoryProtocol
+    private var records: [ContractionRecord] = []
+    private let repository: ContractionRecordRepository
 
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -23,14 +23,11 @@ class HistoryViewModel {
         return dateFormatter
     }()
 
-    init(
-        records: [ContractionRecord] = [],
-        repository: ContractionRecordRepositoryProtocol = ContractionRecordRepository.shared
-    ) {
-        self.records = records
+    init(repository: ContractionRecordRepository = .shared) {
         self.repository = repository
+
         Task {
-            await repository.setDelegate(self)
+            await initialize()
         }
     }
 
@@ -61,6 +58,12 @@ class HistoryViewModel {
         }
         return sections
     }
+
+    // MARK: - Private
+
+    private func initialize() async {
+        await repository.setDelegate(self)
+    }
 }
 
 extension HistoryViewModel: ContractionRecordRepositoryDelegate {
@@ -70,5 +73,11 @@ extension HistoryViewModel: ContractionRecordRepositoryDelegate {
     
     func didAddRecord(_ record: ContractionRecord) {
         records.append(record)
+    }
+}
+
+extension HistoryViewModel {
+    static func preview() -> HistoryViewModel {
+        HistoryViewModel()
     }
 }

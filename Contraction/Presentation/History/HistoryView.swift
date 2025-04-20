@@ -17,6 +17,11 @@ struct HistoryView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .onAppear {
+            Task {
+                await viewModel.loadData()
+            }
+        }
     }
 }
 

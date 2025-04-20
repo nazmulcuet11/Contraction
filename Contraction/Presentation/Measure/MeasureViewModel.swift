@@ -15,12 +15,12 @@ final class MeasureViewModel {
 
     private var timeElapsed: TimeInterval
     private var timerSubscription: AnyCancellable?
-    private let recordRepository: ContractionRecordRepositoryProtocol
+    private let recordRepository: ContractionRecordRepository
 
     init(
         timeElapsed: TimeInterval = 0,
         timerSubscription: AnyCancellable? = nil,
-        recordRepository: ContractionRecordRepositoryProtocol = ContractionRecordRepository.shared
+        recordRepository: ContractionRecordRepository = .shared
     ) {
         self.timeElapsed = timeElapsed
         self.timerSubscription = timerSubscription

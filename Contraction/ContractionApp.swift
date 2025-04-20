@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct ContractionApp: App {
+
+    private let viewModel = AppViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppView(viewModel: viewModel)
         }
     }
 }
