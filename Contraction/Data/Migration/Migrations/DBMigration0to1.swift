@@ -13,8 +13,9 @@ final class DBMigration0to1: DBMigration {
     var destinationSchemaVersion: Int = 1
     
     func migrate() async throws {
-        let records = try readRecordsFromDisk()
+        let records = try readRecordsFromUserDefaults()
         try writeRecordsToDB(records)
+        removeRecordsFromUserDefaults()
     }
 
     private func writeRecordsToDB(_ records: [ContractionRecordOld]) throws {
@@ -47,7 +48,7 @@ final class DBMigration0to1: DBMigration {
         return decoder
     }()
     
-    private func readRecordsFromDisk() throws -> [ContractionRecordOld] {
+    private func readRecordsFromUserDefaults() throws -> [ContractionRecordOld] {
         guard let jsonString = userDefaults.string(forKey: contractionRecordskey),
               let jsonData = jsonString.data(using: .utf8) else {
             return []
@@ -55,5 +56,9 @@ final class DBMigration0to1: DBMigration {
         
         let decodedRecords = try decoder.decode([ContractionRecordOld].self, from: jsonData)
         return decodedRecords
+    }
+
+    private func removeRecordsFromUserDefaults() {
+        userDefaults.removeObject(forKey: contractionRecordskey)
     }
 }
