@@ -11,6 +11,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		38D91C002DB4879D00360B2A /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		38FE39002DB3CE8400CE9EEE /* Contraction */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Contraction;
@@ -34,6 +39,7 @@
 			children = (
 				38FE39002DB3CE8400CE9EEE /* Contraction */,
 				38FE38FF2DB3CE8400CE9EEE /* Products */,
+				38D91C002DB4879D00360B2A /* Resources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -61,6 +67,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				38D91C002DB4879D00360B2A /* Resources */,
 				38FE39002DB3CE8400CE9EEE /* Contraction */,
 			);
 			name = Contraction;
@@ -256,6 +263,7 @@
 				DEVELOPMENT_TEAM = 5F3NR8DAZL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Contraction;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -284,6 +292,7 @@
 				DEVELOPMENT_TEAM = 5F3NR8DAZL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Contraction;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

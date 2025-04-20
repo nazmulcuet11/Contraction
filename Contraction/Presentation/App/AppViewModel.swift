@@ -20,11 +20,11 @@ final class AppViewModel {
 
     init() {
         Task {
-            await load()
+            try await load()
         }
     }
 
-    func load() async {
+    func load() async throws {
         let measureViewModel = MeasureViewModel()
         let historyViewModel = HistoryViewModel()
         let rootViewModel = RootViewModel(
