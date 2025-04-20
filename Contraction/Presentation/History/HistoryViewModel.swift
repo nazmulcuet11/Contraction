@@ -25,10 +25,7 @@ class HistoryViewModel {
 
     init(repository: ContractionRecordRepository = .shared) {
         self.repository = repository
-
-        Task {
-            await initialize()
-        }
+        repository.setDelegate(self)
     }
 
     func loadData() async {
@@ -62,22 +59,12 @@ class HistoryViewModel {
     // MARK: - Private
 
     private func initialize() async {
-        await repository.setDelegate(self)
+        repository.setDelegate(self)
     }
 }
 
 extension HistoryViewModel: ContractionRecordRepositoryDelegate {
-    func didLoadRecords(_ records: [ContractionRecord]) {
-        self.records = records
-    }
-    
     func didAddRecord(_ record: ContractionRecord) {
         records.append(record)
-    }
-}
-
-extension HistoryViewModel {
-    static func preview() -> HistoryViewModel {
-        HistoryViewModel()
     }
 }

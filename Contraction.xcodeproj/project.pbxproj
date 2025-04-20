@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		38FAB34A2DB4A5090075FB33 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 38FAB3492DB4A5090075FB33 /* RealmSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		38FE38FE2DB3CE8400CE9EEE /* Contraction.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Contraction.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -24,22 +28,31 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		38FE38FB2DB3CE8400CE9EEE /* Frameworks */ = {
+		38FAB3462DB4A3C40075FB33 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38FAB34A2DB4A5090075FB33 /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		38FAB3472DB4A41E0075FB33 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		38FE38F52DB3CE8400CE9EEE = {
 			isa = PBXGroup;
 			children = (
 				38FE39002DB3CE8400CE9EEE /* Contraction */,
 				38FE38FF2DB3CE8400CE9EEE /* Products */,
 				38D91C002DB4879D00360B2A /* Resources */,
+				38FAB3472DB4A41E0075FB33 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -59,8 +72,8 @@
 			buildConfigurationList = 38FE39092DB3CE8600CE9EEE /* Build configuration list for PBXNativeTarget "Contraction" */;
 			buildPhases = (
 				38FE38FA2DB3CE8400CE9EEE /* Sources */,
-				38FE38FB2DB3CE8400CE9EEE /* Frameworks */,
 				38FE38FC2DB3CE8400CE9EEE /* Resources */,
+				38FAB3462DB4A3C40075FB33 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -72,6 +85,7 @@
 			);
 			name = Contraction;
 			packageProductDependencies = (
+				38FAB3492DB4A5090075FB33 /* RealmSwift */,
 			);
 			productName = Contraction;
 			productReference = 38FE38FE2DB3CE8400CE9EEE /* Contraction.app */;
@@ -101,6 +115,9 @@
 			);
 			mainGroup = 38FE38F52DB3CE8400CE9EEE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				38FAB3482DB4A5090075FB33 /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 38FE38FF2DB3CE8400CE9EEE /* Products */;
 			projectDirPath = "";
@@ -335,6 +352,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		38FAB3482DB4A5090075FB33 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 20.0.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		38FAB3492DB4A5090075FB33 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38FAB3482DB4A5090075FB33 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 38FE38F62DB3CE8400CE9EEE /* Project object */;
 }

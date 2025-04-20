@@ -12,7 +12,7 @@ import Observation
 @MainActor
 final class HistoryRowViewModel: Identifiable {
 
-    let id: Int
+    let id: String
 
     private var record: ContractionRecord
 
