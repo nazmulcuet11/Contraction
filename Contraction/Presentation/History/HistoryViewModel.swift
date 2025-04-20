@@ -10,9 +10,10 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 class HistoryViewModel {
-    private(set) var records: [ContractionRecord]
 
+    private var records: [ContractionRecord]
     private let repository: ContractionRecordRepositoryProtocol
 
     private let dateFormatter: DateFormatter = {
@@ -30,22 +31,6 @@ class HistoryViewModel {
         self.repository = repository
         Task {
             await repository.setDelegate(self)
-            await loadData()
-        }
-    }
-
-    func groupRecordsByDate() -> [(key: String, value: [ContractionRecord])] {
-        let grouped = Dictionary(grouping: records) { record in
-            dateFormatter.string(from: record.start)
-        }
-
-        // Sort by date descending (newest first)
-        return grouped.sorted { lhs, rhs in
-            guard let lhsDate = dateFormatter.date(from: lhs.key),
-                  let rhsDate = dateFormatter.date(from: rhs.key) else {
-                return false
-            }
-            return lhsDate > rhsDate
         }
     }
 
@@ -54,6 +39,27 @@ class HistoryViewModel {
             return
         }
         self.records = records
+    }
+
+    func sections() -> [HistorySectionViewModel] {
+        let sortedRecords = records.sorted(by:  { $0.start > $1.start })
+        let grouped = Dictionary(grouping: sortedRecords) { record in
+            dateFormatter.string(from: record.start)
+        }
+
+        var sections = [HistorySectionViewModel]()
+        for (title, records) in grouped {
+            let rows = records.map {
+                HistoryRowViewModel(record: $0)
+            }
+            let section = HistorySectionViewModel(
+                id: title,
+                title: title,
+                rows: rows
+            )
+            sections.append(section)
+        }
+        return sections
     }
 }
 

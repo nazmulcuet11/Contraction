@@ -8,8 +8,8 @@
 import Foundation
 
 protocol ContractionRecordRepositoryDelegate: AnyObject {
-    func didLoadRecords(_ records: [ContractionRecord])
-    func didAddRecord(_ record: ContractionRecord)
+    func didLoadRecords(_ records: [ContractionRecord]) async
+    func didAddRecord(_ record: ContractionRecord) async
 }
 
 protocol ContractionRecordRepositoryProtocol {
@@ -28,7 +28,7 @@ final actor ContractionRecordRepository: ContractionRecordRepositoryProtocol {
 
     func addRecord(_ record: ContractionRecord) async throws {
         records.append(record)
-        delegate?.didAddRecord(record)
+        await delegate?.didAddRecord(record)
         writeRecordsToDisk()
     }
 
@@ -47,9 +47,9 @@ final actor ContractionRecordRepository: ContractionRecordRepositoryProtocol {
 
     // MARK: - Private
 
-    private func loadRecordsFromDisk() {
+    private func loadRecordsFromDisk() async {
         self.records = readRecordsFromDisk()
-        delegate?.didLoadRecords(records)
+        await delegate?.didLoadRecords(records)
     }
 
     private let encoder = {
