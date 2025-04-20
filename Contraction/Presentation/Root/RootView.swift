@@ -24,6 +24,12 @@ struct RootView: View {
                     Image(systemName: "clock.arrow.circlepath")
                     Text("History")
                 }
+
+            Text("Coming soon...")
+                .tabItem {
+                    Image(systemName: "gear")
+                    Text("Settings")
+                }
         }
     }
 }
