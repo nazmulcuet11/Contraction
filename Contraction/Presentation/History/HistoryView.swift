@@ -22,7 +22,7 @@ struct HistoryHeaderView: View {
             Divider().frame(height: 36)
 
             Button {
-                // TODO: - Implement
+                viewModel.didTapFilterButton()
             } label: {
                 Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
             }
@@ -63,7 +63,9 @@ struct HistoryView: View {
         .sheet(item: $viewModel.presentedBottomSheet) { item in
             switch item {
             case .sortOption:
-                SortOptionsView(viewModel: viewModel)
+                SortOptionsView(viewModel: viewModel.sortOptionsViewModel)
+            case .filterOption:
+                FilterOptionsView(viewModel: viewModel.filterOptionsViewModel)
             }
         }
     }

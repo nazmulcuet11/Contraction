@@ -9,15 +9,11 @@
 import Foundation
 import Observation
 
-enum SortOption {
-    case newestFirst
-    case oldestFirst
-}
-
 enum PresentedBottomSheet: Hashable, Identifiable {
     var id: Int { hashValue }
     
     case sortOption
+    case filterOption
 }
 
 @Observable
@@ -25,7 +21,9 @@ enum PresentedBottomSheet: Hashable, Identifiable {
 class HistoryViewModel {
 
     var presentedBottomSheet: PresentedBottomSheet?
-    var sortOption = SortOption.newestFirst
+
+    private(set) var sortOptionsViewModel: SortOptionsViewModel
+    private(set) var filterOptionsViewModel: FilterOptionsViewModel
 
     private var records: [ContractionRecord] = []
     private let recordRepository: ContractionRecordRepository?
@@ -39,9 +37,13 @@ class HistoryViewModel {
 
     init(
         records: [ContractionRecord] = [],
+        sortOptionsViewModel: SortOptionsViewModel? = nil,
+        filterOptionsViewModel: FilterOptionsViewModel? = nil,
         recordRepository: ContractionRecordRepository? = nil
     ) {
         self.records = records
+        self.sortOptionsViewModel = sortOptionsViewModel ?? SortOptionsViewModel()
+        self.filterOptionsViewModel = filterOptionsViewModel ?? FilterOptionsViewModel()
         self.recordRepository = recordRepository
         recordRepository?.setDelegate(self)
     }
@@ -54,16 +56,11 @@ class HistoryViewModel {
     }
 
     func sections() -> [HistorySectionViewModel] {
-        let sortedRecords = records.sorted {
-            switch sortOption {
-            case.newestFirst:
-                return $0.start > $1.start
-            case .oldestFirst:
-                return $0.start < $1.start
-            }
-        }
+        let records = self.records
+            .sorted(by: sortingLogic(lhs:rhs:))
+            .filter(filteringLogic(record:))
 
-        let grouped = Dictionary(grouping: sortedRecords) { record in
+        let grouped = Dictionary(grouping: records) { record in
             dateFormatter.string(from: record.start)
         }
 
@@ -86,9 +83,23 @@ class HistoryViewModel {
         presentedBottomSheet = .sortOption
     }
 
-    func applySort(_ option: SortOption) {
-        presentedBottomSheet = nil
-        sortOption = option
+    func didTapFilterButton() {
+        presentedBottomSheet = .filterOption
+    }
+}
+
+private extension HistoryViewModel {
+    func sortingLogic(lhs: ContractionRecord, rhs: ContractionRecord) -> Bool {
+        switch sortOptionsViewModel.selectedOption {
+        case.newestFirst:
+            return lhs.start > rhs.start
+        case .oldestFirst:
+            return lhs.start < rhs.start
+        }
+    }
+
+    func filteringLogic(record: ContractionRecord) -> Bool {
+        return true
     }
 }
 

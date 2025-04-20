@@ -8,15 +8,13 @@
 import SwiftUI
 
 struct SortOptionsView: View {
-    @Bindable var viewModel: HistoryViewModel
-
-    @Environment(\.dismiss) private var dismiss
+    @Bindable var viewModel: SortOptionsViewModel
 
     var body: some View {
         NavigationView {
             Form {
                 Section {
-                    Picker(selection: $viewModel.sortOption) {
+                    Picker(selection: $viewModel.selectedOption) {
                         Text("Newest First").tag(SortOption.newestFirst)
                         Text("Oldest First").tag(SortOption.oldestFirst)
                     } label: {
