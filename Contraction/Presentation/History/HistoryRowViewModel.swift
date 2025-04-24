@@ -22,9 +22,7 @@ final class HistoryRowViewModel: Identifiable {
     }
 
     func timeRangeString() -> String {
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "h:mm a"
-        return "\(timeFormatter.string(from: record.start)) - \(timeFormatter.string(from: record.end))"
+        return "\(Self.timeFormatter.string(from: record.start)) - \(Self.timeFormatter.string(from: record.end))"
     }
 
     func durationString() -> String {
@@ -34,4 +32,12 @@ final class HistoryRowViewModel: Identifiable {
         let seconds = duration % 60
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
+}
+
+private extension HistoryRowViewModel {
+    static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        return formatter
+    }()
 }

@@ -28,13 +28,6 @@ class HistoryViewModel {
     private var records: [ContractionRecord] = []
     private let recordRepository: ContractionRecordRepository?
 
-    private let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        return dateFormatter
-    }()
-
     init(
         records: [ContractionRecord] = [],
         sortOptionsViewModel: SortOptionsViewModel? = nil,
@@ -57,21 +50,24 @@ class HistoryViewModel {
 
     func sections() -> [HistorySectionViewModel] {
         let records = self.records
-            .sorted(by: sortingLogic(lhs:rhs:))
             .filter(filteringLogic(record:))
 
         let grouped = Dictionary(grouping: records) { record in
-            dateFormatter.string(from: record.start)
+            Calendar.current.startOfDay(for: record.start)
         }
 
         var sections = [HistorySectionViewModel]()
-        for (title, records) in grouped {
-            let rows = records.map {
-                HistoryRowViewModel(record: $0)
+        for date in grouped.keys.sorted(by: sortingLogic(lhs:rhs:)) {
+            guard let records = grouped[date] else {
+                continue
             }
+
+            let rows = records
+                .sorted(by: sortingLogic(lhs:rhs:))
+                .map { HistoryRowViewModel(record: $0) }
+
             let section = HistorySectionViewModel(
-                id: title,
-                title: title,
+                date: date,
                 rows: rows
             )
             sections.append(section)
@@ -89,13 +85,17 @@ class HistoryViewModel {
 }
 
 private extension HistoryViewModel {
-    func sortingLogic(lhs: ContractionRecord, rhs: ContractionRecord) -> Bool {
+    func sortingLogic(lhs: Date, rhs: Date) -> Bool {
         switch sortOptionsViewModel.selectedOption {
         case.newestFirst:
-            return lhs.start > rhs.start
+            return lhs > rhs
         case .oldestFirst:
-            return lhs.start < rhs.start
+            return lhs < rhs
         }
+    }
+
+    func sortingLogic(lhs: ContractionRecord, rhs: ContractionRecord) -> Bool {
+        return sortingLogic(lhs: lhs.start, rhs: rhs.start)
     }
 
     func filteringLogic(record: ContractionRecord) -> Bool {

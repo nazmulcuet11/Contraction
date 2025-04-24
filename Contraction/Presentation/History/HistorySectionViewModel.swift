@@ -13,15 +13,25 @@ import Observation
 final class HistorySectionViewModel: Identifiable {
     let id: String
     let title: String
+    let date: Date
     let rows: [HistoryRowViewModel]
 
     init(
-        id: String,
-        title: String,
+        date: Date,
         rows: [HistoryRowViewModel]
     ) {
-        self.id = id
-        self.title = title
+        self.date = date
+        self.id = Self.dateFormatter.string(from: date)
+        self.title = Self.dateFormatter.string(from: date)
         self.rows = rows
     }
+}
+
+private extension HistorySectionViewModel {
+    static let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        return dateFormatter
+    }()
 }
